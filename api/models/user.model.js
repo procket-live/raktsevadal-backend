@@ -14,7 +14,8 @@ const userSchema = mongoose.Schema({
     latest_location: {
         latitude: { type: mongoose.Schema.Types.String },
         longitude: { type: mongoose.Schema.Types.String }
-    }
+    },
+    profile_image: String,
 })
 
 module.exports = mongoose.model('User', userSchema);
