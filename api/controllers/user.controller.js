@@ -154,15 +154,22 @@ exports.verify_otp = (req, res, next) => {
         })
 }
 
-exports.set_firebase_token = (req, res, next) => {
+exports.update_user = (req, res, next) => {
     const userId = req.userData.userId;
-    const firebaseToken = req.body.firebase_token;
+    const body = req.body;
 
-    User.update({ _id: userId }, { $set: { "firebase_token": firebaseToken } })
+    const updateParams = {};
+
+    Object.keys(body).forEach((key) => {
+        updateParams[key] = body[key];
+    })
+
+    User.update({ _id: userId }, { $set: updateParams })
         .exec()
         .then(() => {
             res.status(201).json({
                 success: true,
+                response: 'updated'
             })
         })
         .catch((err) => {

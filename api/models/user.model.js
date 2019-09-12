@@ -8,10 +8,13 @@ const userSchema = mongoose.Schema({
         require: true,
         unique: true,
     },
-    is_mobile_verified: { type: Boolean, default: false },
     blood_group: { type: mongoose.Schema.Types.ObjectId, ref: 'BloodGroup' },
     dob: { type: mongoose.Schema.Types.Date },
     firebase_token: String,
+    latest_location: {
+        latitude: { type: mongoose.Schema.Types.String },
+        longitude: { type: mongoose.Schema.Types.String }
+    }
 })
 
 module.exports = mongoose.model('User', userSchema);
