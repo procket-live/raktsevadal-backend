@@ -16,6 +16,7 @@ const userSchema = mongoose.Schema({
         longitude: { type: mongoose.Schema.Types.String }
     },
     profile_image: String,
+    gender: String,
 })
 
 module.exports = mongoose.model('User', userSchema);

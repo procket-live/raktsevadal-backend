@@ -5,6 +5,7 @@ const bloodRequirementModel = mongoose.Schema({
     active: { type: mongoose.Schema.Types.Boolean, default: true },
     fulfiled: { type: mongoose.Schema.Types.Boolean, default: false },
     blood_group: { type: mongoose.Schema.Types.ObjectId, ref: 'BloodGroup' },
+    blood_unit: { type: mongoose.Schema.Types.Number },
     patient_name: { type: String, require: true },
     patient_age: { type: String, require: true },
     hospital_name: { type: String, require: true },

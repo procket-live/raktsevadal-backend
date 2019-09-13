@@ -15,7 +15,6 @@ mongoose.connect(
 );
 mongoose.Promise = global.Promise;
 
-// app.use(Sentry.Handlers.requestHandler());
 app.use(morgan('dev'))
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -30,8 +29,6 @@ app.use((req, res, next) => {
     }
     next();
 });
-
-// app.use(Sentry.Handlers.errorHandler());
 
 app.use('/user', userRoutes);
 

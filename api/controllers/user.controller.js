@@ -81,6 +81,7 @@ exports.generate_otp = (req, res, next) => {
             const otp = new Otp({
                 _id: new mongoose.Types.ObjectId(),
                 mobile,
+                otp: generatedOtp,
                 expires: moment().add('15', 'minutes').format('YYYY-MM-DD HH:mm:ss')
             })
 
@@ -111,20 +112,19 @@ exports.verify_otp = (req, res, next) => {
         .exec()
         .then((results) => {
             if (results.length == 0) {
-                res.status(200).json({
+                return res.status(200).json({
                     success: false,
                     response: 'otp expired, please try again'
                 })
             }
-
-            if (results.otp == otp) {
-                User.findOne({ mobile })
+            if (results[0].otp == otp) {
+                User.find({ mobile })
                     .exec()
-                    .then((user) => {
+                    .then((users) => {
                         const token = jwt.sign(
                             {
-                                userId: user[0]._id,
-                                mobile: user[0].mobile
+                                userId: users[0]._id,
+                                mobile: users[0].mobile
                             },
                             process.env.JWT_SECRET,
                             {
@@ -132,21 +132,21 @@ exports.verify_otp = (req, res, next) => {
                             }
                         );
 
-                        res.status(200).json({
+                        return res.status(200).json({
                             success: true,
-                            response: user,
+                            response: users[0],
                             token
                         })
                     })
                     .catch(() => {
-                        res.status(200).json({
+                        return res.status(200).json({
                             success: false,
                             response: 'unable to find user'
                         })
                     })
 
             } else {
-                res.status(200).json({
+                return res.status(200).json({
                     success: false,
                     response: 'wrong otp'
                 })
