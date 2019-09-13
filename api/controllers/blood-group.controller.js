@@ -19,3 +19,24 @@ exports.get_bloodgroups = (req, res, next) => {
             })
         })
 };
+
+exports.add_bloodgroup = (req, res, next) => {
+    const bg = new BloodGroup({
+        _id: new mongoose.Types.ObjectId(),
+        name: req.body.name
+    });
+
+    bg.save()
+        .then(() => {
+            res.status(200).json({
+                success: true,
+                response: 'blood group added'
+            })
+        })
+        .catch((err) => {
+            res.status(200).json({
+                success: false,
+                response: err
+            })
+        })
+};

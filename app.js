@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 
 const userRoutes = require('./api/routes/user.route');
+const bloodGroupRoutes = require('./api/routes/blood-group.route');
+const bloodGroupRequirementRoutes = require('./api/routes/blood-requirement.route');
 
 const app = express();
 
@@ -31,6 +33,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/user', userRoutes);
+app.use('/bloodGroup', bloodGroupRoutes);
+app.use('/bloodGroupRequirement', bloodGroupRequirementRoutes);
 
 app.use((req, res, next) => {
     const error = new Error("Not found");
