@@ -108,7 +108,7 @@ exports.verify_otp = (req, res) => {
     const mobile = req.body.mobile;
     const otp = req.body.otp;
 
-    Otp.find({ mobile, otp, deleted_at: { $eq: null } })
+    Otp.find({ mobile, otp })
         .exec()
         .then((results) => {
             if (results.length == 0) {
