@@ -108,16 +108,18 @@ exports.verify_otp = (req, res) => {
     const mobile = req.body.mobile;
     const otp = req.body.otp;
 
-    Otp.find({ mobile, otp })
+    Otp.find({ mobile })
         .exec()
         .then((results) => {
+            console.log('results', results);
             if (results.length == 0) {
                 return res.status(200).json({
                     success: false,
                     response: 'otp expired, please try again'
                 })
             }
-            if (results[0].otp == otp) {
+            const lastIndex = results.length - 1;
+            if (results[lastIndex].otp == otp) {
                 User.find({ mobile })
                     .exec()
                     .then((users) => {
