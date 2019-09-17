@@ -9,9 +9,6 @@ const MSG91SendSMS = require('../utils/sendSMS')
 
 exports.get_user = (req, res, next) => {
     User.find({ _id: req.userData.userId })
-        .populate({
-            path: 'blood_group',
-        })
         .exec()
         .then((users) => {
             if (users.length == 0) {
