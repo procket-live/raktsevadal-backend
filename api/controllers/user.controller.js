@@ -104,11 +104,11 @@ exports.generate_otp = (req, res, next) => {
         });
 }
 
-exports.verify_otp = (req, res, next) => {
+exports.verify_otp = (req, res) => {
     const mobile = req.body.mobile;
     const otp = req.body.otp;
 
-    Otp.find({ mobile, otp })
+    Otp.find({ mobile, otp, deleted_at: { $eq: null } })
         .exec()
         .then((results) => {
             if (results.length == 0) {
@@ -132,11 +132,21 @@ exports.verify_otp = (req, res, next) => {
                             }
                         );
 
-                        return res.status(200).json({
-                            success: true,
-                            response: users[0],
-                            token
-                        })
+                        Otp.findByIdAndUpdate(results[0]._id, { $set: { "deleted_at": new Date() } })
+                            .exec()
+                            .then(() => {
+                                return res.status(200).json({
+                                    success: true,
+                                    response: users[0],
+                                    token
+                                })
+                            })
+                            .catch(() => {
+                                return res.status(200).json({
+                                    success: false,
+                                    response: 'something went wrong'
+                                })
+                            })
                     })
                     .catch(() => {
                         return res.status(200).json({
