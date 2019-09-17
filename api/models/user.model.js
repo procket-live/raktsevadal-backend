@@ -8,15 +8,15 @@ const userSchema = mongoose.Schema({
         require: true,
         unique: true,
     },
-    blood_group: { type: mongoose.Schema.Types.ObjectId, ref: 'BloodGroup' },
-    dob: { type: mongoose.Schema.Types.Date },
+    blood_group: String,
+    dob: String,
+    gender: String,
     firebase_token: String,
     latest_location: {
         latitude: { type: mongoose.Schema.Types.String },
         longitude: { type: mongoose.Schema.Types.String }
     },
-    profile_image: String,
-    gender: String,
+    profile_image: String
 })
 
 module.exports = mongoose.model('User', userSchema);

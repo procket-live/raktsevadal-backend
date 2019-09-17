@@ -111,16 +111,16 @@ exports.verify_otp = (req, res) => {
     Otp.find({ mobile })
         .exec()
         .then((results) => {
-            console.log('results', results);
             if (results.length == 0) {
                 return res.status(200).json({
                     success: false,
                     response: 'otp expired, please try again'
                 })
             }
+            
             const lastIndex = results.length - 1;
             if (results[lastIndex].otp == otp) {
-                User.find({ mobile })
+                User.find({ mobile: String(mobile) })
                     .exec()
                     .then((users) => {
                         const token = jwt.sign(
@@ -150,7 +150,7 @@ exports.verify_otp = (req, res) => {
                                 })
                             })
                     })
-                    .catch(() => {
+                    .catch((err) => {
                         return res.status(200).json({
                             success: false,
                             response: 'unable to find user'
