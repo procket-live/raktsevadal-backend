@@ -83,6 +83,7 @@ exports.add_new_blood_requirement = (req, res, next) => {
     const bloodRequirement = new BloodRequirement({
         _id: new mongoose.Types.ObjectId(),
         blood_group: req.body.blood_group,
+        blood_unit: req.body.blood_unit,
         patient_name: req.body.patient_name,
         patient_age: req.body.patient_age,
         hospital_name: req.body.hospital_name,
@@ -94,7 +95,7 @@ exports.add_new_blood_requirement = (req, res, next) => {
         required_till: req.body.required_till,
         documents: req.body.documents,
         contact_person_name: req.body.contact_person_name,
-        alternate_contact_person_name: req.body.alternate_contact_person_name,
+        contact_person_mobile: req.body.contact_person_mobile,
         created_by: userId,
         created_at: new Date()
     })
