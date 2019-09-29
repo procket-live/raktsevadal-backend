@@ -18,7 +18,7 @@ const bloodRequirementModel = mongoose.Schema({
     required_till: { type: mongoose.Schema.Types.Date },
     documents: [{ type: mongoose.Schema.Types.String }],
     contact_person_name: { type: mongoose.Schema.Types.String, require: true },
-    contact_person_mobile: { type: mongoose.Schema.Types.String },
+    contact_person_mobile: String,
     created_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     created_at: { type: mongoose.Schema.Types.Date }
 })
