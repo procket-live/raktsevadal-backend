@@ -86,6 +86,7 @@ exports.add_new_blood_requirement = (req, res, next) => {
         blood_unit: req.body.blood_unit,
         patient_name: req.body.patient_name,
         patient_age: req.body.patient_age,
+        patient_gender: req.body.patient_gender,
         hospital_name: req.body.hospital_name,
         hospital_address: req.body.hospital_address,
         hospital_location: {
