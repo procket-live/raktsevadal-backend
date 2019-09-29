@@ -89,14 +89,14 @@ exports.add_new_blood_requirement = (req, res, next) => {
         patient_gender: req.body.patient_gender,
         hospital_name: req.body.hospital_name,
         hospital_address: req.body.hospital_address,
-        hospital_location: {
-            type: "Point",
-            coordinates: req.body.hospital_location
-        },
+        // hospital_location: {
+        //     type: "Point",
+        //     coordinates: req.body.hospital_location
+        // },
         required_till: req.body.required_till,
         documents: req.body.documents,
         contact_person_name: req.body.contact_person_name,
-        contact_person_mobile: req.body.contact_person_mobile,
+        // contact_person_mobile: req.body.contact_person_mobile,
         created_by: userId,
         created_at: new Date()
     })
