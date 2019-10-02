@@ -12,8 +12,15 @@ const bloodRequirementModel = mongoose.Schema({
     hospital_name: { type: String, require: true },
     hospital_address: { type: String, require: true },
     hospital_location: {
-        type: String,
-        coordinates: []
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
     },
     required_till: { type: mongoose.Schema.Types.Date },
     documents: [{ type: mongoose.Schema.Types.String }],
