@@ -8,6 +8,7 @@ const Otp = require('../models/otp.model');
 const MSG91SendSMS = require('../utils/sendSMS')
 
 exports.get_user = (req, res, next) => {
+    console.log('ffsdfs');
     User.find({ _id: req.userData.userId })
         .exec()
         .then((users) => {
@@ -31,6 +32,8 @@ exports.get_user = (req, res, next) => {
 };
 
 exports.create_user_if_not_exist = (req, res, next) => {
+    console.log('ffsdfs');
+
     const mobile = req.body.mobile;
     User.find({ mobile })
         .exec()

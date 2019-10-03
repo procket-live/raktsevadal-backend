@@ -27,7 +27,7 @@ exports.get_blood_requirement = (req, res, next) => {
     const id = req.params.id;
 
     BloodRequirement
-        .findOne({ _id: id, created_by: userId })
+        .findOne({ _id: id })
         .exec()
         .then((bloodRequirement) => {
             res.status(201).json({
