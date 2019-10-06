@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
+mongoose.set('useCreateIndex', true);
 
 const userRoutes = require('./api/routes/user.route');
 const bloodGroupRoutes = require('./api/routes/blood-group.route');
@@ -9,12 +10,15 @@ const bloodGroupRequirementRoutes = require('./api/routes/blood-requirement.rout
 
 const app = express();
 
-mongoose.connect(
+const yo = mongoose.connect(
     'mongodb+srv://raktsevadal:jJnfw5WxYUj503Np@cluster0-havth.mongodb.net/test?retryWrites=true&w=majority',
     {
         useNewUrlParser: true
     }
-);
+).then((db) => {
+    db.models.BloodRequirement.createIndexes({ hospital_location: "2dsphere" });
+})
+
 mongoose.Promise = global.Promise;
 
 app.use(morgan('dev'))

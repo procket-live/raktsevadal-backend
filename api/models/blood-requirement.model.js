@@ -27,7 +27,14 @@ const bloodRequirementModel = mongoose.Schema({
     contact_person_name: { type: mongoose.Schema.Types.String, require: true },
     contact_person_mobile: String,
     created_by: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    created_at: { type: mongoose.Schema.Types.Date }
+    created_at: { type: mongoose.Schema.Types.Date },
+    doners: [
+        {
+            user_id: { type: mongoose.Schema.Types.ObjectId, require: true },
+            created_at: { type: mongoose.Schema.Types.Date }
+        }
+    ]
 })
 
+bloodRequirementModel.index({ hospital_location: '2dsphere' });
 module.exports = mongoose.model('BloodRequirement', bloodRequirementModel);

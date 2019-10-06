@@ -2,11 +2,47 @@ const mongoose = require('mongoose');
 
 const BloodRequirement = require('../models/blood-requirement.model');
 
-exports.get_my_blood_requirements = (req, res, next) => {
+exports.get_blood_requirements = (req, res, next) => {
     const userId = req.userData.userId;
+    console.log('params', req.query)
+
+    const filter = {
+        active: 1
+    };
+
+    const latitude = req.query.latitude;
+    const longitude = req.query.longitude;
+    const bloodGroups = (req.query.blood_group || '').replaceAll('p', '+').replaceAll('n', '-');
+    const createdBy = req.query.created_by;
+
+    if (latitude && longitude) {
+        filter.hospital_location = {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [latitude, longitude]
+                },
+                $maxDistance: 2
+            }
+        }
+    }
+
+    if (bloodGroups) {
+        const groups = bloodGroups.split(',');
+        console.log('groups', groups)
+        filter.blood_group = {
+            $in: groups
+        }
+    }
+
+    if (createdBy) {
+        filter.created_by = {
+            $eq: createdBy
+        }
+    }
 
     BloodRequirement
-        .find({ created_by: userId })
+        .find(filter)
         .exec()
         .then((bloodRequirements) => {
             res.status(201).json({
@@ -15,6 +51,7 @@ exports.get_my_blood_requirements = (req, res, next) => {
             })
         })
         .catch((err) => {
+            console.log('err', err)
             res.status(201).json({
                 success: false,
                 response: err
@@ -39,6 +76,32 @@ exports.get_blood_requirement = (req, res, next) => {
             res.status(201).json({
                 success: false,
                 response: err
+            })
+        })
+}
+
+exports.bocome_doner = (req, res, next) => {
+    const userId = req.userData.userId;
+    const id = req.params.id;
+
+    const doner = {
+        user_id: userId,
+        created_at: Date.now()
+    }
+
+    BloodRequirement
+        .update({ _id: id }, { $push: { "doners": doner } })
+        .exec()
+        .then(() => {
+            res.status(201).json({
+                success: true,
+                response: 'Blood donation request accepted'
+            })
+        })
+        .catch((err) => {
+            res.status(201).json({
+                success: false,
+                response: 'Something went wrong'
             })
         })
 }
