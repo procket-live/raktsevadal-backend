@@ -117,7 +117,7 @@ exports.verify_otp = (req, res) => {
                     response: 'otp expired, please try again'
                 })
             }
-            
+
             const lastIndex = results.length - 1;
             if (results[lastIndex].otp == otp) {
                 User.find({ mobile: String(mobile) })
@@ -182,6 +182,56 @@ exports.update_user = (req, res, next) => {
             res.status(201).json({
                 success: true,
                 response: 'updated'
+            })
+        })
+        .catch((err) => {
+            res.status(200).json({
+                success: false,
+                response: err
+            })
+        })
+}
+
+exports.find_user = (req, res, next) => {
+    const userId = req.userData.userId;
+    const bloodGroup = (req.query.blood_group || '').replaceAll('p', '+').replaceAll('n', '-')
+    const latitude = req.query.latitude;
+    const longitude = req.query.longitude;
+
+    const filter = {
+        _id: {
+            $ne: userId
+        }
+    };
+
+    // if (bloodGroup) {
+    //     const groups = bloodGroup.split(',');
+    //     filter.blood_group = {
+    //         $in: groups
+    //     }
+    // }
+
+    // if (latitude && longitude) {
+    //     filter.latest_location = {
+    //         $near: {
+    //             $geometry: {
+    //                 type: "Point",
+    //                 coordinates: [parseFloat(latitude), parseFloat(longitude)]
+    //             },
+    //             $maxDistance: 1000
+    //         }
+    //     }
+    // }
+
+    console.log('filter', filter)
+
+    User.find(filter)
+        .select('name blood_group')
+        .exec()
+        .then((users) => {
+            res.status(201).json({
+                success: true,
+                response: users
             })
         })
         .catch((err) => {

@@ -4,7 +4,6 @@ const BloodRequirement = require('../models/blood-requirement.model');
 
 exports.get_blood_requirements = (req, res, next) => {
     const userId = req.userData.userId;
-    console.log('params', req.query)
 
     const filter = {
         active: 1
@@ -14,22 +13,22 @@ exports.get_blood_requirements = (req, res, next) => {
     const longitude = req.query.longitude;
     const bloodGroups = (req.query.blood_group || '').replaceAll('p', '+').replaceAll('n', '-');
     const createdBy = req.query.created_by;
+    const notCreatedBy = req.query.not_created_by;
 
     if (latitude && longitude) {
         filter.hospital_location = {
             $near: {
                 $geometry: {
                     type: "Point",
-                    coordinates: [latitude, longitude]
+                    coordinates: [parseFloat(latitude), parseFloat(longitude)]
                 },
-                $maxDistance: 2
+                $maxDistance: 1000
             }
         }
     }
 
     if (bloodGroups) {
         const groups = bloodGroups.split(',');
-        console.log('groups', groups)
         filter.blood_group = {
             $in: groups
         }
@@ -38,6 +37,12 @@ exports.get_blood_requirements = (req, res, next) => {
     if (createdBy) {
         filter.created_by = {
             $eq: createdBy
+        }
+    }
+
+    if (notCreatedBy) {
+        filter.created_by = {
+            $ne: notCreatedBy
         }
     }
 
@@ -85,7 +90,7 @@ exports.bocome_doner = (req, res, next) => {
     const id = req.params.id;
 
     const doner = {
-        user_id: userId,
+        user: userId,
         created_at: Date.now()
     }
 
@@ -130,6 +135,37 @@ exports.get_nearby_blood_requirements = (req, res, next) => {
             res.status(201).json({
                 success: true,
                 response: bloodRequirements
+            })
+        })
+        .catch((err) => {
+            res.status(201).json({
+                success: false,
+                response: err
+            })
+        })
+}
+
+exports.get_accepted_doners = (req, res, next) => {
+    const id = req.params.id;
+
+    BloodRequirement
+        .find({ _id: id })
+        .select('doners')
+        .populate('doners.user')
+        .exec()
+        .then((bloodRequirements) => {
+            if (!bloodRequirements.length) {
+                return res.status(201).json({
+                    success: false,
+                    response: 'No blood donation request found'
+                })
+            }
+
+            const doners = bloodRequirements[0].doners || [];
+
+            res.status(201).json({
+                success: true,
+                response: doners
             })
         })
         .catch((err) => {
@@ -194,6 +230,27 @@ exports.remove_blood_requirement = (req, res, next) => {
             res.status(201).json({
                 success: true,
                 response: 'blood requirement removed'
+            })
+        })
+        .catch((err) => {
+            res.status(201).json({
+                success: false,
+                response: err
+            });
+        })
+}
+
+exports.got_blood_requirement = (req, res, next) => {
+    const userId = req.userData.userId;
+    const id = req.params.id
+
+    BloodRequirement
+        .update({ _id: id, created_by: userId }, { $set: { "active": false, "fulfiled": true } })
+        .exec()
+        .then(() => {
+            res.status(201).json({
+                success: true,
+                response: 'blood requirement fulfiled'
             })
         })
         .catch((err) => {

@@ -30,7 +30,7 @@ const bloodRequirementModel = mongoose.Schema({
     created_at: { type: mongoose.Schema.Types.Date },
     doners: [
         {
-            user_id: { type: mongoose.Schema.Types.ObjectId, require: true },
+            user: { type: mongoose.Schema.Types.ObjectId, require: true, ref: 'User' },
             created_at: { type: mongoose.Schema.Types.Date }
         }
     ]

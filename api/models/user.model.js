@@ -13,10 +13,18 @@ const userSchema = mongoose.Schema({
     gender: String,
     firebase_token: String,
     latest_location: {
-        latitude: { type: mongoose.Schema.Types.String },
-        longitude: { type: mongoose.Schema.Types.String }
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
     },
     profile_image: String
-})
+});
 
+userSchema.index({ latest_location: '2dsphere' });
 module.exports = mongoose.model('User', userSchema);
