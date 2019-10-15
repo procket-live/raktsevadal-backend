@@ -31,12 +31,12 @@ exports.get_blood_requirements = (req, res, next) => {
         }
     }
 
-    if (bloodGroups) {
-        const groups = bloodGroups.split(',');
-        filter.blood_group = {
-            $in: groups
-        }
-    }
+    // if (bloodGroups) {
+    //     const groups = bloodGroups.split(',');
+    //     filter.blood_group = {
+    //         $in: groups
+    //     }
+    // }
 
     if (createdBy) {
         filter.created_by = {
@@ -125,7 +125,7 @@ exports.bocome_doner = (req, res, next) => {
                             const mobile = createdByUser.mobile;
 
                             const title = 'Blood donation request accepted:';
-                            const message = `${acceptedDonerName} has accepted your blood donation request of ${bloodGroups}.`;
+                            const message = `${acceptedDonerName} has accepted your blood donation request of ${bloodGroup}.`;
 
                             sendSms(mobile, `${title} \n ${message}`);
                             sendNotification(title, message, [firetoken], { blood_donation_request_id: id });
@@ -136,40 +136,6 @@ exports.bocome_doner = (req, res, next) => {
             res.status(201).json({
                 success: false,
                 response: 'Something went wrong'
-            })
-        })
-}
-
-exports.get_nearby_blood_requirements = (req, res, next) => {
-    const userId = req.userData.userId;
-    const latitude = req.body.latitude;
-    const longitude = req.body.longitude;
-
-    BloodRequirement
-        .find({
-            active: true,
-            hospital_location: {
-                $near: {
-                    $maxDistance: 1000,
-                    $geometry: {
-                        type: "Point",
-                        coordinates: [latitude, longitude]
-                    }
-                }
-            },
-            created_by: { $ne: userId }
-        })
-        .exec()
-        .then((bloodRequirements) => {
-            res.status(201).json({
-                success: true,
-                response: bloodRequirements
-            })
-        })
-        .catch((err) => {
-            res.status(201).json({
-                success: false,
-                response: err
             })
         })
 }
