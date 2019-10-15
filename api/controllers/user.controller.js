@@ -8,7 +8,6 @@ const Otp = require('../models/otp.model');
 const MSG91SendSMS = require('../utils/sendSMS')
 
 exports.get_user = (req, res, next) => {
-    console.log('ffsdfs');
     User.find({ _id: req.userData.userId })
         .exec()
         .then((users) => {
@@ -32,8 +31,6 @@ exports.get_user = (req, res, next) => {
 };
 
 exports.create_user_if_not_exist = (req, res, next) => {
-    console.log('ffsdfs');
-
     const mobile = req.body.mobile;
     User.find({ mobile })
         .exec()
@@ -88,7 +85,7 @@ exports.generate_otp = (req, res, next) => {
             otp
                 .save()
                 .then(() => {
-                    const template = `Welcome to Raktsevadal. One Time Password to verify mobile number is ${generatedOtp}`;
+                    const template = `Welcome to Gameplex. OTP is ${generatedOtp} \n YaZSGGTXEUE`;
                     MSG91SendSMS(mobile, template);
                     res.status(201).json({
                         success: true,
@@ -204,26 +201,24 @@ exports.find_user = (req, res, next) => {
         }
     };
 
-    // if (bloodGroup) {
-    //     const groups = bloodGroup.split(',');
-    //     filter.blood_group = {
-    //         $in: groups
-    //     }
-    // }
+    if (bloodGroup) {
+        const groups = bloodGroup.split(',');
+        filter.blood_group = {
+            $in: groups
+        }
+    }
 
-    // if (latitude && longitude) {
-    //     filter.latest_location = {
-    //         $near: {
-    //             $geometry: {
-    //                 type: "Point",
-    //                 coordinates: [parseFloat(latitude), parseFloat(longitude)]
-    //             },
-    //             $maxDistance: 1000
-    //         }
-    //     }
-    // }
-
-    console.log('filter', filter)
+    if (latitude && longitude) {
+        filter.latest_location = {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [parseFloat(latitude), parseFloat(longitude)]
+                },
+                $maxDistance: 1000
+            }
+        }
+    }
 
     User.find(filter)
         .select('name blood_group')
