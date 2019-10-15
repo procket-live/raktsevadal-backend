@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const BloodRequirement = require('../models/blood-requirement.model');
+const User = require('../models/user.model');
+
+const sendSms = require('../utils/sendSMS');
+const sendNotification = require('../utils/notifications');
 
 exports.get_blood_requirements = (req, res, next) => {
     const userId = req.userData.userId;
@@ -102,6 +106,31 @@ exports.bocome_doner = (req, res, next) => {
                 success: true,
                 response: 'Blood donation request accepted'
             })
+
+            User
+                .find({ _id: userId })
+                .exec()
+                .then((acceptedDoners) => {
+                    const acceptedDoner = acceptedDoners[0];
+                    const acceptedDonerName = acceptedDoner.name;
+
+                    BloodRequirement
+                        .find({ _id: id })
+                        .populate('created_by')
+                        .exec()
+                        .then((bloodReqs) => {
+                            const createdByUser = bloodReqs[0].created_by;
+                            const bloodGroup = bloodReqs[0].blood_group;
+                            const firetoken = createdByUser.firebase_token;
+                            const mobile = createdByUser.mobile;
+
+                            const title = 'Blood donation request accepted:';
+                            const message = `${acceptedDonerName} has accepted your blood donation request of ${bloodGroups}.`;
+
+                            sendSms(mobile, `${title} \n ${message}`);
+                            sendNotification(title, message, [firetoken], { blood_donation_request_id: id });
+                        })
+                })
         })
         .catch((err) => {
             res.status(201).json({

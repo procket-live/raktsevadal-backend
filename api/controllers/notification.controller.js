@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const Notification = require('../models/notification.model');
+const User = require('../models/user.model');
+
+const sendNotification = require('../utils/notifications');
 
 exports.get_notification = (req, res, next) => {
     const userId = req.userData.userId;
@@ -43,8 +46,16 @@ exports.request = (req, res, next) => {
         .then(() => {
             res.status(200).json({
                 success: true,
-                response: 'requested'
+                response: 'Blood donation request generated.'
             })
+
+            User
+                .find({ _id: user })
+                .exec()
+                .then((users) => {
+                    const token = users[0].firebase_token;
+                    sendNotification('Blood donation requirement', message, [token], { show_notification_scene: true });
+                })
         })
         .catch((err) => {
             res.status(200).json({
