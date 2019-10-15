@@ -26,7 +26,7 @@ exports.get_blood_requirements = (req, res, next) => {
                     type: "Point",
                     coordinates: [latitude, longitude]
                 },
-                $maxDistance: 50 / 111.12
+                $maxDistance: 50 * 1000
             }
         }
     }
