@@ -24,9 +24,9 @@ exports.get_blood_requirements = (req, res, next) => {
             $near: {
                 $geometry: {
                     type: "Point",
-                    coordinates: [parseFloat(latitude), parseFloat(longitude)]
+                    coordinates: [latitude, longitude]
                 },
-                $maxDistance: 1000 * 50
+                $maxDistance: 50 / 111.12
             }
         }
     }
