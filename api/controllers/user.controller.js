@@ -42,7 +42,7 @@ exports.create_user_if_not_exist = (req, res, next) => {
                     mobile,
                     latest_location: {
                         type: "Point",
-                        coordinates: []
+                        coordinates: [0.0, 0.0]
                     }
                 });
 
