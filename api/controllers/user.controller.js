@@ -39,8 +39,12 @@ exports.create_user_if_not_exist = (req, res, next) => {
                 //creating new user
                 const user = new User({
                     _id: new mongoose.Types.ObjectId(),
-                    mobile
-                })
+                    mobile,
+                    latest_location: {
+                        type: "Point",
+                        coordinates: []
+                    }
+                });
 
                 user
                     .save()
