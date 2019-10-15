@@ -31,12 +31,12 @@ exports.get_blood_requirements = (req, res, next) => {
         }
     }
 
-    // if (bloodGroups) {
-    //     const groups = bloodGroups.split(',');
-    //     filter.blood_group = {
-    //         $in: groups
-    //     }
-    // }
+    if (bloodGroups) {
+        const groups = bloodGroups.split(',');
+        filter.blood_group = {
+            $in: groups
+        }
+    }
 
     if (createdBy) {
         filter.created_by = {

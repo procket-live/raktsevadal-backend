@@ -205,12 +205,12 @@ exports.find_user = (req, res, next) => {
         }
     };
 
-    // if (bloodGroup) {
-    //     const groups = bloodGroup.split(',');
-    //     filter.blood_group = {
-    //         $in: groups
-    //     }
-    // }
+    if (bloodGroup) {
+        const groups = bloodGroup.split(',');
+        filter.blood_group = {
+            $in: groups
+        }
+    }
 
     if (latitude && longitude) {
         filter.latest_location = {
