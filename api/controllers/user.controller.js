@@ -219,7 +219,7 @@ exports.find_user = (req, res, next) => {
                     type: "Point",
                     coordinates: [parseFloat(latitude), parseFloat(longitude)]
                 },
-                $maxDistance: 1000
+                $maxDistance: 1000 * 50
             }
         }
     }
