@@ -3244,6 +3244,11 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-native-autodetect-otp@^0.4.9:
+  version "0.4.9"
+  resolved "https://registry.yarnpkg.com/react-native-autodetect-otp/-/react-native-autodetect-otp-0.4.9.tgz#c3f610bbcdc786a847e0cf8ba7e943126e2f8570"
+  integrity sha512-1DZT0iFFMnl/OSHTdQwXH5oJ9FPfucANfxgN9IhgXbpD5bEXDN6+qHjjp22+F9ahhG6ABfnUgu3/Uv1Kbns7bg==
+
 "readable-stream@2 || 3", readable-stream@^3.0.2, readable-stream@^3.1.1:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.4.0.tgz#a51c26754658e0a3c21dbf59163bd45ba6f447fc"

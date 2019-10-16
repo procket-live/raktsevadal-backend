@@ -54,7 +54,7 @@ exports.request = (req, res, next) => {
                 .exec()
                 .then((users) => {
                     const token = users[0].firebase_token;
-                    sendNotification('Blood donation requirement', message, [token], { show_notification_scene: true });
+                    sendNotification('Blood donation requirement', message, [token], { blood_donation_request_id: bloodRequest });
                 })
         })
         .catch((err) => {
