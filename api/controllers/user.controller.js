@@ -89,7 +89,7 @@ exports.generate_otp = (req, res, next) => {
             otp
                 .save()
                 .then(() => {
-                    const template = encodeURI(`<#> Welcome to Raktsevadal. OTP is ${generatedOtp} \n biAKR98oesH`);
+                    const template = `<#> Welcome to Raktsevadal. OTP is ${generatedOtp} \n biAKR98oesH`;
                     MSG91SendSMS(mobile, template);
                     res.status(201).json({
                         success: true,
