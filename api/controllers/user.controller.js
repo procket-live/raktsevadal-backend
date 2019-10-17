@@ -131,9 +131,10 @@ exports.truecaller_login = (req, res) => {
             }
         })
         .catch((err) => {
+            console.log('truecaller err', err);
             return res.status(200).json({
                 success: false,
-                response: err
+                response: 'ERRROOOOOORRRR'
             });
         })
 }
