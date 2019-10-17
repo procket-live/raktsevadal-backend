@@ -69,6 +69,8 @@ exports.create_user_if_not_exist = (req, res, next) => {
                     })
             } else {
                 req.userId = users[0]._id;
+                req.profile = profile;
+                req.mobile = mobile;
                 next();
             }
         })
