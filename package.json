@@ -26,6 +26,7 @@
     "morgan": "1.9.1",
     "nodemon": "^1.19.2",
     "react-native-autodetect-otp": "^0.4.9",
+    "truecaller": "^1.1.0",
     "util": "^0.12.0"
   },
   "author": "",

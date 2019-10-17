@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const truecaller = require('truecaller');
 
 const User = require('../models/user.model');
 const Otp = require('../models/otp.model');
@@ -32,6 +33,8 @@ exports.get_user = (req, res, next) => {
 
 exports.create_user_if_not_exist = (req, res, next) => {
     const mobile = req.body.mobile;
+    const profile = req.body.profile;
+
     User.find({ mobile })
         .exec()
         .then((users) => {
@@ -53,6 +56,8 @@ exports.create_user_if_not_exist = (req, res, next) => {
                             .exec()
                             .then((newUser) => {
                                 req.userId = newUser._id;
+                                req.profile = profile;
+                                req.mobile = mobile;
                                 next();
                             })
                     })
@@ -67,6 +72,64 @@ exports.create_user_if_not_exist = (req, res, next) => {
                 next();
             }
         })
+}
+
+exports.truecaller_login = (req, res) => {
+    const userId = req.userId;
+    const profile = req.profile;
+    const mobile = req.mobile;
+
+    truecaller.verifyProfile(profile, (err, verificationResul) => {
+        if (err) {
+            return res.status(200).json({
+                success: false,
+                response: 'something went wrong'
+            });
+        }
+
+        if (verificationResul == true) {
+            const token = jwt.sign(
+                {
+                    userId: userId,
+                    mobile: mobile
+                },
+                process.env.JWT_SECRET,
+                {
+                    expiresIn: "500h"
+                }
+            );
+
+            User
+                .update(
+                    { _id: userId },
+                    {
+                        $set: {
+                            "name": `${profile.firstName} ${profile.lastName}`,
+                            "profile_image": profile.avatarUrl
+                        }
+                    }
+                )
+                .exec()
+                .then(() => {
+                    User
+                        .find({ _id: userId })
+                        .exec()
+                        .then((results) => {
+                            return res.status(200).json({
+                                success: true,
+                                response: results[0],
+                                token
+                            })
+                        })
+                })
+
+        } else {
+            return res.status(200).json({
+                success: false,
+                response: 'something went wrong'
+            });
+        }
+    })
 }
 
 exports.generate_otp = (req, res, next) => {

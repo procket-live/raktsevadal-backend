@@ -6,6 +6,7 @@ const checkAuth = require('../middlewares/check-auth');
 
 router.get('/', checkAuth, UserController.get_user);
 router.put('/', checkAuth, UserController.update_user);
+router.post('/truecaller', UserController.create_user_if_not_exist, UserController.truecaller_login);
 router.post('/generateOTP', UserController.create_user_if_not_exist, UserController.generate_otp);
 router.post('/verifyOTP', UserController.verify_otp);
 router.get('/find', checkAuth, UserController.find_user);
