@@ -85,6 +85,8 @@ exports.truecaller_login = (req, res) => {
         publicKeys: undefined
     };
 
+    console.log('profile', profile);
+
     truecaller
         .verifyProfile(profile, options)
         .then((profile) => {
