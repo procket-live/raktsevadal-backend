@@ -81,7 +81,7 @@ exports.truecaller_login = (req, res) => {
     console.log('truecaller')
     console.log('truecaller', JSON.stringify(profile));
     truecaller.verifyProfile(profile, (err, verificationResul) => {
-        console.log('verificationResul', verificationResul);
+        console.log('verificationResul', verificationResul, err);
         if (err) {
             return res.status(200).json({
                 success: false,
