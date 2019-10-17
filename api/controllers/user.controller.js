@@ -78,8 +78,10 @@ exports.truecaller_login = (req, res) => {
     const userId = req.userId;
     const profile = req.profile;
     const mobile = req.mobile;
-
+    console.log('truecaller')
+    console.log('truecaller', JSON.stringify(profile));
     truecaller.verifyProfile(profile, (err, verificationResul) => {
+        console.log('verificationResul', verificationResul);
         if (err) {
             return res.status(200).json({
                 success: false,
