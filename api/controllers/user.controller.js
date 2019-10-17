@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const moment = require('moment');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const truecaller = require('truecaller');
+const truecaller = require('@vyng/truecaller-node');
 
 const User = require('../models/user.model');
 const Otp = require('../models/otp.model');
@@ -78,60 +78,64 @@ exports.truecaller_login = (req, res) => {
     const userId = req.userId;
     const profile = req.profile;
     const mobile = req.mobile;
-    console.log('truecaller')
-    console.log('truecaller', profile);
-    truecaller.verifyProfile(profile, (err, verificationResul) => {
-        console.log('verificationResul', verificationResul, err);
-        if (err) {
-            return res.status(200).json({
-                success: false,
-                response: 'something went wrong'
-            });
-        }
 
-        if (verificationResul == true) {
-            const token = jwt.sign(
-                {
-                    userId: userId,
-                    mobile: mobile
-                },
-                process.env.JWT_SECRET,
-                {
-                    expiresIn: "500h"
-                }
-            );
+    var options = {
+        url: 'https://api4.truecaller.com/v1/key',
+        ttl: 1000 * 60 * 10,
+        publicKeys: undefined
+    };
 
-            User
-                .update(
-                    { _id: userId },
+    truecaller
+        .verifyProfile(profile, options)
+        .then((profile) => {
+            if (profile.verifiedSignature) {
+                const token = jwt.sign(
                     {
-                        $set: {
-                            "name": `${profile.firstName} ${profile.lastName}`,
-                            "profile_image": profile.avatarUrl
-                        }
+                        userId: userId,
+                        mobile: mobile
+                    },
+                    process.env.JWT_SECRET,
+                    {
+                        expiresIn: "500h"
                     }
-                )
-                .exec()
-                .then(() => {
-                    User
-                        .find({ _id: userId })
-                        .exec()
-                        .then((results) => {
-                            return res.status(200).json({
-                                success: true,
-                                response: results[0],
-                                token
-                            })
-                        })
-                })
+                );
 
-        } else {
+                User
+                    .update(
+                        { _id: userId },
+                        {
+                            $set: {
+                                "name": `${profile.firstName} ${profile.lastName}`,
+                                "profile_image": profile.avatarUrl
+                            }
+                        }
+                    )
+                    .exec()
+                    .then(() => {
+                        User
+                            .find({ _id: userId })
+                            .exec()
+                            .then((results) => {
+                                return res.status(200).json({
+                                    success: true,
+                                    response: results[0],
+                                    token
+                                })
+                            })
+                    })
+            } else {
+                return res.status(200).json({
+                    success: false,
+                    response: 'something went wrong'
+                });
+            }
+        })
+        .catch((err) => {
             return res.status(200).json({
                 success: false,
-                response: 'something went wrong'
+                response: err
             });
-        }
-    })
+        })
 }
 
 exports.generate_otp = (req, res, next) => {
