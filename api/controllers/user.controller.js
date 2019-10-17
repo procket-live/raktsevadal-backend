@@ -110,7 +110,8 @@ exports.truecaller_login = (req, res) => {
                         {
                             $set: {
                                 "name": `${profile.firstName} ${profile.lastName}`,
-                                "profile_image": profile.avatarUrl
+                                "profile_image": profile.avatarUrl,
+                                "mobile": mobile
                             }
                         }
                     )
