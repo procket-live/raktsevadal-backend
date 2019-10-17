@@ -32,8 +32,12 @@ exports.get_user = (req, res, next) => {
 };
 
 exports.create_user_if_not_exist = (req, res, next) => {
-    const mobile = req.body.mobile;
+    let mobile = req.body.mobile;
     const profile = req.body.profile;
+
+    if (!mobile) {
+        mobile = profile.phoneNumber.substring(3);
+    }
 
     User.find({ mobile })
         .exec()
