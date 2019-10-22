@@ -8,6 +8,7 @@ const userRoutes = require('./api/routes/user.route');
 const bloodGroupRoutes = require('./api/routes/blood-group.route');
 const bloodGroupRequirementRoutes = require('./api/routes/blood-requirement.route');
 const notificatonRoutes = require('./api/routes/notification.route');
+const bloodDonationCampRoutes = require('./api/routes/blood-donation-camp.route');
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use('/user', userRoutes);
 app.use('/bloodGroup', bloodGroupRoutes);
 app.use('/bloodGroupRequirement', bloodGroupRequirementRoutes);
 app.use('/notification', notificatonRoutes);
+app.use('/camp', bloodDonationCampRoutes);
 
 app.use((req, res, next) => {
     const error = new Error("Not found");
