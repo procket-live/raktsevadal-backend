@@ -4,10 +4,10 @@ const bloodDonationCampSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: String,
     description: String,
-    startDate: Date,
-    endDate: Date,
-    startTime: String,
-    endTime: String,
+    start_date: Date,
+    end_date: Date,
+    start_time: String,
+    end_time: String,
     city: String,
     location: {
         type: {
