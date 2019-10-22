@@ -43,7 +43,6 @@ exports.create_user_if_not_exist = (req, res, next) => {
         .exec()
         .then((users) => {
             if (users.length == 0) {
-                //creating new user
                 const user = new User({
                     _id: new mongoose.Types.ObjectId(),
                     mobile,

@@ -18,6 +18,7 @@ exports.get_blood_requirements = (req, res, next) => {
     const bloodGroups = (req.query.blood_group || '').replaceAll('p', '+').replaceAll('n', '-');
     const createdBy = req.query.created_by;
     const notCreatedBy = req.query.not_created_by;
+    const range = req.query.range || 50;
 
     if (latitude && longitude) {
         filter.hospital_location = {
@@ -26,7 +27,7 @@ exports.get_blood_requirements = (req, res, next) => {
                     type: "Point",
                     coordinates: [latitude, longitude]
                 },
-                $maxDistance: 50 * 1000
+                $maxDistance: range * 1000
             }
         }
     }
