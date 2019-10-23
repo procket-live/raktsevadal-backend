@@ -26,6 +26,7 @@
     "mongoose": "5.5.11",
     "morgan": "1.9.1",
     "nodemon": "^1.19.2",
+    "querystring": "^0.2.0",
     "react-native-autodetect-otp": "^0.4.9",
     "util": "^0.12.0"
   },
