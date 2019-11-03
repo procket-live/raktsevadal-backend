@@ -174,6 +174,9 @@ exports.get_accepted_doners = (req, res, next) => {
 
 exports.add_new_blood_requirement = (req, res, next) => {
     const userId = req.userData.userId;
+    req.latitude = req.body.hospital_location_latitude;
+    req.longitude = req.body.hospital_location_longitude;
+    req.bloodGroup = req.body.blood_group;
 
     const bloodRequirement = new BloodRequirement({
         _id: new mongoose.Types.ObjectId(),

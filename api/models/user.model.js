@@ -21,7 +21,10 @@ const userSchema = mongoose.Schema({
             type: [Number],
         }
     },
-    profile_image: String
+    profile_image: String,
+    role: { type: String, enum: ['admin', 'restricted'], required: true, default: 'restricted' },
+    password: { type: String },
+    email: { type: String, unique: true }
 });
 
 userSchema.index({ latest_location: '2dsphere' });

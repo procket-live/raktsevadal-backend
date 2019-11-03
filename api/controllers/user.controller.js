@@ -7,6 +7,7 @@ const truecaller = require('@vyng/truecaller-node');
 const User = require('../models/user.model');
 const Otp = require('../models/otp.model');
 const MSG91SendSMS = require('../utils/sendSMS')
+const DONATION = require('../donation.constant');
 
 exports.get_user = (req, res, next) => {
     User.find({ _id: req.userData.userId })
@@ -301,6 +302,54 @@ exports.find_user = (req, res, next) => {
                     coordinates: [parseFloat(latitude), parseFloat(longitude)]
                 },
                 $maxDistance: 1000 * 50
+            }
+        }
+    }
+
+    User.find(filter)
+        .select('name blood_group')
+        .exec()
+        .then((users) => {
+            res.status(201).json({
+                success: true,
+                response: users
+            })
+        })
+        .catch((err) => {
+            res.status(200).json({
+                success: false,
+                response: err
+            })
+        })
+}
+
+exports.send_push_notification_to_nearby_users = (req, res, next) => {
+    const userId = req.userData.userId;
+    const bloodGroup = req.bloodGroup;
+    const latitude =  req.latitude;
+    const longitude = req.longitude;
+    const iCanReceive = DONATION[bloodGroup].receive;
+
+    const filter = {
+        _id: {
+            $ne: userId
+        }
+    };
+
+    if (bloodGroup) {
+        filter.blood_group = {
+            $in: iCanReceive
+        }
+    }
+
+    if (latitude && longitude) {
+        filter.latest_location = {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [parseFloat(latitude), parseFloat(longitude)]
+                },
+                $maxDistance: 1000 * 150
             }
         }
     }
