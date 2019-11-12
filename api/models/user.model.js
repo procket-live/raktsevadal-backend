@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema({
         }
     },
     profile_image: String,
-    role: { type: String, enum: ['admin', 'restricted'], required: true, default: 'restricted' },
+    role: { type: String, enum: ['admin', 'restricted', 'user', 'head'], required: true, default: 'user' },
     password: { type: String },
     email: { type: String, unique: true }
 });
