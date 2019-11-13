@@ -27,9 +27,27 @@ exports.join_camp = (req, res, next) => {
         .update({ _id: id }, { $push: { "users_going": userId } })
         .exec()
         .then(() => {
-            return res.status(201).json({
-                success: true,
-                response: 'You are going to blood donation camp.'
+            BloodDonationCamp
+                .find({ _id: id })
+                .exec()
+                .then((result) => {
+                    return res.status(201).json({
+                        success: true,
+                        response: result
+                    })
+                })
+                .catch((err) => {
+                    res.status(201).json({
+                        success: false,
+                        response: err
+                    })
+                })
+
+        })
+        .catch((err) => {
+            res.status(201).json({
+                success: false,
+                response: err
             })
         })
 }
