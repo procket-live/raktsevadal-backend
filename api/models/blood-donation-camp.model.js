@@ -23,6 +23,7 @@ const bloodDonationCampSchema = mongoose.Schema({
     address: String,
     image_url: String,
     expires_at: Date,
+    users_going: [{ type: mongoose.Schema.Types.ObjectId, require: true, ref: 'User' }]
 })
 
 module.exports = mongoose.model('BloodDonationCamp', bloodDonationCampSchema);

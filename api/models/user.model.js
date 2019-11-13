@@ -24,6 +24,7 @@ const userSchema = mongoose.Schema({
     profile_image: String,
     role: { type: String, enum: ['admin', 'restricted', 'user', 'head'], required: true, default: 'user' },
     password: { type: String },
+    last_blood_donation: { type: String },
     email: { type: String, unique: true }
 });
 
