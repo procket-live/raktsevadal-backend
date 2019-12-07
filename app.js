@@ -12,12 +12,14 @@ const bloodGroupRoutes = require('./api/routes/blood-group.route');
 const bloodGroupRequirementRoutes = require('./api/routes/blood-requirement.route');
 const notificatonRoutes = require('./api/routes/notification.route');
 const bloodDonationCampRoutes = require('./api/routes/blood-donation-camp.route');
+const postRoutes = require('./api/routes/post.route');
 
 const userModel = require('./api/models/user.model');
 const bloodDonationCampModel = require('./api/models/blood-donation-camp.model');
 const bloodRequirementModel = require('./api/models/blood-requirement.model');
 const notificationModel = require('./api/models/notification.model');
 const otpModel = require('./api/models/otp.model');
+const postModel = require('./api/models/post.model');
 
 const app = express();
 
@@ -29,7 +31,7 @@ const database = mongoose.connect(
 ).then((db) => {
     db.models.BloodRequirement.createIndexes({ hospital_location: "2dsphere" });
 })
-
+mongoose.set('useFindAndModify', true);
 mongoose.Promise = global.Promise;
 AdminBro.registerAdapter(require('admin-bro-mongoose'))
 const adminBro = new AdminBro({
@@ -44,7 +46,7 @@ const adminBro = new AdminBro({
                 }
             }
         },
-        bloodDonationCampModel, bloodRequirementModel, notificationModel, otpModel],
+        bloodDonationCampModel, bloodRequirementModel, notificationModel, otpModel, postModel],
     rootPath: '/admin',
     branding: {
         companyName: 'Rakt Sevadal',
@@ -54,7 +56,7 @@ const adminBro = new AdminBro({
 adminBroRouter = AdminBroExpressjs.buildAuthenticatedRouter(adminBro, {
     authenticate: async (email, password) => {
         const user = await userModel.findOne({ email })
-        console.log('user',user);
+        console.log('user', user);
         if (user) {
             const matched = password == user.password;
             if (matched) {
@@ -88,6 +90,7 @@ app.use('/bloodGroup', bloodGroupRoutes);
 app.use('/bloodGroupRequirement', bloodGroupRequirementRoutes);
 app.use('/notification', notificatonRoutes);
 app.use('/camp', bloodDonationCampRoutes);
+app.use('/post', postRoutes);
 
 app.use((req, res, next) => {
     const error = new Error("Not found");

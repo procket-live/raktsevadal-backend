@@ -172,7 +172,7 @@ exports.get_accepted_doners = (req, res, next) => {
         })
 }
 
-exports.add_new_blood_requirement = (req, res, next) => {
+exports.add_new_blood_requirement = async (req, res, next) => {
     const userId = req.userData.userId;
     req.latitude = req.body.hospital_location_latitude;
     req.longitude = req.body.hospital_location_longitude;
@@ -202,20 +202,19 @@ exports.add_new_blood_requirement = (req, res, next) => {
         created_at: new Date()
     })
 
-    bloodRequirement
-        .save()
-        .then(() => {
-            res.status(201).json({
-                success: true,
-                response: 'new blood requirement added'
-            })
+    try {
+        await bloodRequirement.save();
+        await User.findByIdAndUpdate(userId, { $inc: { request: 1 } }).exec();
+        return res.status(201).json({
+            success: true,
+            response: 'new blood requirement added'
         })
-        .catch((err) => {
-            res.status(201).json({
-                success: false,
-                response: err
-            });
-        })
+    } catch (err) {
+        return res.status(201).json({
+            success: false,
+            response: err
+        });
+    }
 }
 
 exports.remove_blood_requirement = (req, res, next) => {
