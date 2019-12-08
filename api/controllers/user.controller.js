@@ -307,7 +307,7 @@ exports.find_user = (req, res, next) => {
     }
 
     User.find(filter)
-        .select('name blood_group')
+        .select('name blood_group last_blood_donation profile_image location_address')
         .exec()
         .then((users) => {
             res.status(201).json({
