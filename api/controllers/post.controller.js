@@ -11,7 +11,6 @@ exports.create_tournament = (req, res) => {
             coordinates: [req.body.latitude, req.body.longitude]
         },
         location_address: req.body.location_address,
-        liked_by: [],
         image: req.body.image,
         caption: req.body.caption,
         created_by: userId

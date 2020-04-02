@@ -12,7 +12,7 @@ const postSchema = mongoose.Schema({
         }
     },
     location_address: String,
-    liked_by: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    liked_by: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     likes: { type: Number, default: 0 },
     caption: String,
     image: String,
