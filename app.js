@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const AdminBro = require('admin-bro')
 const AdminBroExpressjs = require('admin-bro-expressjs')
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 mongoose.set('useCreateIndex', true);
 
 const userRoutes = require('./api/routes/user.route');
@@ -24,48 +23,48 @@ const postModel = require('./api/models/post.model');
 const app = express();
 
 const database = mongoose.connect(
-    'mongodb+srv://raktsevadal:jJnfw5WxYUj503Np@cluster0-havth.mongodb.net/test?retryWrites=true&w=majority',
-    {
-        useNewUrlParser: true
-    }
+  'mongodb+srv://raktsevadal:jJnfw5WxYUj503Np@cluster0-havth.mongodb.net/test?retryWrites=true&w=majority',
+  {
+    useNewUrlParser: true
+  }
 ).then((db) => {
-    db.models.BloodRequirement.createIndexes({ hospital_location: "2dsphere" });
+  db.models.BloodRequirement.createIndexes({ hospital_location: "2dsphere" });
 })
 mongoose.set('useFindAndModify', true);
 mongoose.Promise = global.Promise;
 AdminBro.registerAdapter(require('admin-bro-mongoose'))
 const adminBro = new AdminBro({
-    resources: [
-        {
-            resource: userModel,
-            actions: {
-                new: {
-                    before: (request) => {
-                        return request
-                    },
-                }
-            }
-        },
-        bloodDonationCampModel, bloodRequirementModel, notificationModel, otpModel, postModel],
-    rootPath: '/admin',
-    branding: {
-        companyName: 'Rakt Sevadal',
-    }
+  resources: [
+    {
+      resource: userModel,
+      actions: {
+        new: {
+          before: (request) => {
+            return request
+          },
+        }
+      }
+    },
+    bloodDonationCampModel, bloodRequirementModel, notificationModel, otpModel, postModel],
+  rootPath: '/admin',
+  branding: {
+    companyName: 'Rakt Sevadal',
+  }
 })
 // adminBroRouter = AdminBroExpressjs.buildRouter(adminBro);
 adminBroRouter = AdminBroExpressjs.buildAuthenticatedRouter(adminBro, {
-    authenticate: async (email, password) => {
-        const user = await userModel.findOne({ email })
-        console.log('user', user);
-        if (user) {
-            const matched = password == user.password;
-            if (matched) {
-                return user
-            }
-        }
-        return false
-    },
-    cookiePassword: 'some-secret-password-used-to-secure-cookie',
+  authenticate: async (email, password) => {
+    const user = await userModel.findOne({ email })
+    console.log('user', user);
+    if (user) {
+      const matched = password == user.password;
+      if (matched) {
+        return user
+      }
+    }
+    return false
+  },
+  cookiePassword: 'some-secret-password-used-to-secure-cookie',
 })
 
 app.use(morgan('dev'))
@@ -74,13 +73,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Request-With, Content-Type, Accept, Authorization');
-    if (req.method === 'OPTIONS') {
-        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-        return res.status(200).json({});
-    }
-    next();
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Request-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+    return res.status(200).json({});
+  }
+  next();
 });
 
 app.use(adminBro.options.rootPath, adminBroRouter)
@@ -93,17 +92,17 @@ app.use('/camp', bloodDonationCampRoutes);
 app.use('/post', postRoutes);
 
 app.use((req, res, next) => {
-    const error = new Error("Not found");
-    error.status = 404;
-    next(error);
+  const error = new Error("Not found");
+  error.status = 404;
+  next(error);
 });
 
 app.use((error, req, res, next) => {
-    res.status(error.status || 500);
-    res.json({
-        success: false,
-        response: error.message
-    });
+  res.status(error.status || 500);
+  res.json({
+    success: false,
+    response: error.message
+  });
 });
 
 module.exports = app;
